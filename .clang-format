@@ -1,5 +1,5 @@
 Cpp11BracedListStyle: false
 SpaceBeforeCpp11BracedList: true
-Block: true
 IndentWidth: 4
 NamespaceIndentation: All
+AccessModifierOffset: -4
