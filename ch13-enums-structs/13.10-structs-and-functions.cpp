@@ -1,4 +1,4 @@
-#include "../print.cpp"
+#include "../print.h"
 
 struct Employee {
     int id {};
@@ -6,7 +6,7 @@ struct Employee {
     double wage {};
 };
 
-void print_employee(const Employee& employee){
+void print_employee(const Employee &employee) {
     std::cout << "ID:\t" << employee.id << "\n";
     std::cout << "Age:\t" << employee.age << "\n";
     std::cout << "Wage:\t" << employee.wage << "\n";
@@ -36,9 +36,10 @@ int main() {
     std::cout << "\n";
     print_employee(frank);
     std::cout << "\n";
-    print_employee( Employee { 16, 40, 35.29 });
+    print_employee(Employee { 16, 40, 35.29 });
     std::cout << "\n";
-    print_employee({ 17, 50, 65.10 }); // type deduced from parameter, implicit conversion
+    print_employee(
+        { 17, 50, 65.10 }); // type deduced from parameter, implicit conversion
     // temporary objects only work in rvalue context (pass by value, pass by const ref)
     // won't work with pass by non-const ref and pass by address
 
@@ -47,8 +48,7 @@ int main() {
     Point3D zero { get_zero_point() };
     if (zero.x == 0.0 && zero.y == 0.0 && zero.z == 0.0) {
         std::cout << "The point is zero\n";
-    }
-    else {
+    } else {
         std::cout << "The point is non-zero\n";
     }
 

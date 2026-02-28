@@ -1,7 +1,7 @@
+#include "../print.h"
 #include <iostream>
 #include <string>
 #include <string_view>
-#include "../print.cpp"
 
 struct Owner {
     std::string name {};
@@ -47,23 +47,28 @@ struct Foo2 {
 };
 
 int main() {
-    Company my_company { 7, { 1, 32, 100000.0 }};
+    Company my_company { 7, { 1, 32, 100000.0 } };
 
     std::cout << my_company.CEO.wage << "\n";
 
     // get_name() returns a temporary in these initializations
-    Owner a { get_name() }; // temporary is used to initialize an owned value, makes a copy
+    Owner a {
+        get_name()
+    }; // temporary is used to initialize an owned value, makes a copy
     std::cout << "Owner's name is " << a.name << "\n";
 
-    Viewer b { get_name() }; // temporary is used to initialize a viewer, then dropped at the end of the expression // NOLINT
-    std::cout << "Viewer's name is " << b.name << "\n"; // dangling reference, undefined behavior
+    Viewer b {
+        get_name() // NOLINT
+    }; // temporary is used to initialize a viewer, then dropped at the end of the expression
+    std::cout << "Viewer's name is " << b.name
+              << "\n"; // dangling reference, undefined behavior
 
     // structs can have padding:
-    print(sizeof(short)); // 2
-    print(sizeof(int)); // 4
+    print(sizeof(short));  // 2
+    print(sizeof(int));    // 4
     print(sizeof(double)); // 8
-    print(sizeof(Foo)); // 2 + 4 + 8 != 16
-    
+    print(sizeof(Foo));    // 2 + 4 + 8 != 16
+
     // padding depends on declaration order:
 
     print(sizeof(Foo1)); // 12

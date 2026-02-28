@@ -1,19 +1,16 @@
-#include "../print.cpp"
+#include "../print.h"
 #include <utility>
 
-template <typename T>
-struct Pair {
+template <typename T> struct Pair {
     T first {};
     T second {};
 };
 
-template <typename T>
-constexpr T max(Pair<T> p) {
+template <typename T> constexpr T max(Pair<T> p) {
     return (p.first < p.second ? p.second : p.first);
 }
 
-template <typename T, typename U>
-struct Pair2 {
+template <typename T, typename U> struct Pair2 {
     T first {};
     U second {};
 };
@@ -25,8 +22,7 @@ struct Point {
 
 // template <typename T, typename U>
 // void print_pair(Pair2<T, U> p) {
-template <typename T>
-void print_parts(T p) {
+template <typename T> void print_parts(T p) {
     std::cout << "[" << p.first << ", " << p.second << "]";
 }
 

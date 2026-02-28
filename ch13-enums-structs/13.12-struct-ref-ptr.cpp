@@ -1,4 +1,4 @@
-#include "../print.cpp"
+#include "../print.h"
 
 struct Employee {
     int id {};
@@ -12,9 +12,9 @@ struct Point {
 };
 
 struct Triangle {
-    Point* a {};
-    Point* b {};
-    Point* c {};
+    Point *a {};
+    Point *b {};
+    Point *c {};
 };
 
 struct Paw {
@@ -31,7 +31,7 @@ int main() {
     ++joe.age;
     joe.wage = 68000.0;
 
-    Employee* ptr { &joe };
+    Employee *ptr { &joe };
     print((*ptr).id);
     print(ptr->id);
 
@@ -39,15 +39,15 @@ int main() {
     Point b { 3, 7 };
     Point c { 10, 2 };
     Triangle tr { &a, &b, &c };
-    Triangle* tr_ptr { &tr };
+    Triangle *tr_ptr { &tr };
 
     print((*(*tr_ptr).c).y);
-    print(tr_ptr -> c -> y);
+    print(tr_ptr->c->y);
 
-    Animal puma { "Puma", { 5 }};
-    Animal* animal_ptr { &puma };
+    Animal puma { "Puma", { 5 } };
+    Animal *animal_ptr { &puma };
 
-    print((animal_ptr -> paw).claws, "\n");
+    print((animal_ptr->paw).claws, "\n");
 
     return 0;
 }

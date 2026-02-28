@@ -1,5 +1,5 @@
+#include "../print.h"
 #include <iostream>
-#include "../print.cpp"
 
 struct Employee {
     int id {};
@@ -7,7 +7,7 @@ struct Employee {
     double wage { 10000.0 };
 };
 
-std::ostream& operator<<(std::ostream& out, const Employee& e) {
+std::ostream &operator<<(std::ostream &out, const Employee &e) {
     out << "id: " << e.id << " age: " << e.age << " wage: " << e.wage;
     return out;
 }
@@ -27,9 +27,9 @@ int main() {
     // mike.age = 10; // not allowed, const
 
     Employee alice {
-        .id { 10 },
+        .id { 10 }, // NOLINT
         // age is value initialized
-        .wage { 30000 },
+        .wage { 30000 }, // NOLINT
         // won't compile if initializers not in the same order as declarations
     };
 
@@ -39,7 +39,10 @@ int main() {
 
     print(alice);
 
-    alice = { .id { 30 }, .age { 40 }}; // wage is value initialized
+    alice = {
+        .id { 30 }, // NOLINT
+        .age { 40 } // NOLINT
+    }; // wage is value initialized
 
     print(alice);
 

@@ -1,0 +1,160 @@
+#include "../../Random.h"
+#include <algorithm>
+#include <cassert>
+#include <ios>
+#include <iostream>
+#include <limits>
+
+void ignore_line() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+namespace Settings {
+    constexpr int bust_score { 21 };
+    constexpr int dealer_stop_score { 17 };
+} // namespace Settings
+
+struct Card {
+    enum Ranks {
+        ace,
+        two,
+        three,
+        four,
+        five,
+        six,
+        seven,
+        eight,
+        nine,
+        ten,
+        jack,
+        queen,
+        king,
+        max_ranks
+    };
+
+    enum Suits { clubs, diamonds, hearts, spades, max_suits };
+
+    static constexpr std::array rank_codes { 'A', '2', '3', '4', '5', '6', '7',
+                                             '8', '9', 'T', 'J', 'Q', 'K' };
+    static constexpr std::array suit_codes { 'C', 'D', 'H', 'S' };
+    static constexpr std::array all_ranks { ace,  two,   three, four, five,
+                                            six,  seven, eight, nine, ten,
+                                            jack, queen, king };
+    static constexpr std::array all_suits { clubs, diamonds, hearts, spades };
+    static constexpr std::array rank_values { 11, 2, 3,  4,  5,  6, 7,
+                                              8,  9, 10, 10, 10, 10 };
+    static_assert(std::size(rank_values) == max_ranks);
+    static_assert(std::size(rank_codes) == max_ranks);
+    static_assert(std::size(suit_codes) == max_suits);
+    static_assert(std::size(all_ranks) == max_ranks);
+    static_assert(std::size(all_suits) == max_suits);
+    static constexpr int cards_per_deck { static_cast<int>(max_ranks) *
+                                          static_cast<int>(max_suits) };
+
+    Ranks rank {};
+    Suits suit {};
+
+    friend std::ostream &operator<<(std::ostream &out, const Card &card) {
+        out << rank_codes[card.rank] << suit_codes[card.suit];
+        return out;
+    }
+
+    int value() const { return rank_values[rank]; }
+};
+
+class Deck {
+private:
+    std::size_t m_deck_index {};
+    std::array<Card, Card::cards_per_deck> m_cards {};
+
+public:
+    Deck() {
+        std::size_t index { 0 };
+        for (auto suit : Card::all_suits) {
+            for (auto rank : Card::all_ranks) {
+                m_cards[index++] = Card { rank, suit };
+            }
+        }
+    }
+    Card deal_card() {
+        assert(m_deck_index < 52 && "No more cards");
+        return m_cards[m_deck_index++];
+    }
+    void shuffle() {
+        std::shuffle(m_cards.begin(), m_cards.end(), Random::mt);
+        m_deck_index = 0;
+    }
+};
+
+struct Player {
+    int score {};
+};
+
+// true if player went bust otherwise false
+bool player_turn(Deck &deck, Player &player) {
+    while (player.score <= Settings::bust_score) {
+        std::cout << "(h) to hit or (s) to stand: ";
+        char c {};
+        std::cin >> c;
+        if (!std::cin) {
+            std::cin.clear();
+            ignore_line();
+        }
+        ignore_line();
+        if (c == 'h') {
+            Card next_card { deck.deal_card() };
+            player.score += next_card.value();
+            std::cout << "You were dealt " << next_card
+                      << ". You now have: " << player.score << "\n";
+        } else if (c == 's') {
+            return false;
+        } else {
+            std::cout << "Invalid input\n";
+        }
+    }
+    std::cout << "You went bust!\n";
+    return true;
+}
+
+// true if dealer went bust otherwise false
+bool dealer_turn(Deck &deck, Player &dealer) {
+    while (dealer.score < Settings::dealer_stop_score) {
+        Card next_card { deck.deal_card() };
+        dealer.score += next_card.value();
+        std::cout << "The dealer flips a " << next_card
+                  << ". They now have: " << dealer.score << "\n";
+    }
+    if (dealer.score > Settings::bust_score) {
+        std::cout << "The dealer went bust!\n";
+        return true;
+    }
+    return false;
+}
+
+// true if player winning, false if dealer is (or tie)
+bool play_blackjack() {
+    Deck deck {};
+    deck.shuffle();
+    // start:
+    Player dealer { deck.deal_card().value() };
+    std::cout << "The dealer is showing: " << dealer.score << "\n";
+    Player player { deck.deal_card().value() + deck.deal_card().value() };
+    std::cout << "You have score: " << player.score << "\n";
+    if (player_turn(deck, player)) {
+        return false;
+    }
+    if (dealer_turn(deck, dealer)) {
+        return true;
+    }
+    return dealer.score < player.score;
+}
+
+int main() {
+    if (play_blackjack()) {
+        std::cout << "You win!\n";
+    } else {
+        std::cout << "You lose!\n";
+    }
+
+    return 0;
+}

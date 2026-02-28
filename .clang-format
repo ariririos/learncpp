@@ -3,3 +3,4 @@ SpaceBeforeCpp11BracedList: true
 IndentWidth: 4
 NamespaceIndentation: All
 AccessModifierOffset: -4
+ReflowComments: Never
