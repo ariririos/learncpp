@@ -6,13 +6,13 @@
 class IntArray {
 private:
     int *m_array {};
-    int m_length {};
+    int m_size {};
 
 public:
     IntArray(int length) {
         assert(length > 0);
         m_array = new int[static_cast<std::size_t>(length)] {};
-        m_length = length;
+        m_size = length;
     }
     ~IntArray() { delete[] m_array; }
     // these two avoid a -Weffc++ warning
@@ -20,7 +20,7 @@ public:
     IntArray &operator=(const IntArray &) = delete;
     void set_value(int index, int value) { m_array[index] = value; }
     int get_value(int index) { return m_array[index]; }
-    int get_length() { return m_length; }
+    int get_length() { return m_size; }
 };
 
 class Simple {
