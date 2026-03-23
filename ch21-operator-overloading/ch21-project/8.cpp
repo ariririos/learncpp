@@ -162,8 +162,10 @@ public:
         return false;
     }
     void randomize() {
-        for (int i { 0 }; i < 1000; i++) {
-            move_tile(Direction::get_random_direction());
+        for (int i { 0 }; i < 1000;) {
+            if (move_tile(Direction::get_random_direction())) {
+                i++;
+            }
         }
     }
     bool operator==(const Board &other) const {
@@ -248,7 +250,7 @@ int main() {
         if (command == 'q') {
             break;
         }
-        if (board.move_tile(UserInput::char_to_direction(command))) {
+        if (board.move_tile(char_to_direction(command))) {
             std::cout << board;
         }
         if (board.player_won()) {
