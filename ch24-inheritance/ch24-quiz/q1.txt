@@ -1,0 +1,28 @@
+// a:
+Base()
+Derived()
+~Derived()
+~Base()
+// b:
+Base()
+Derived()
+Base()
+~Base()
+~Derived()
+~Base()
+// c:
+won't compile because Base's m_x is private
+// d:
+Base()
+Derived()
+Derived: 5
+~Derived()
+~Base()
+// e:
+Base()
+Derived()
+D2()
+Derived: 5
+~D2()
+~Derived()
+~Base()
