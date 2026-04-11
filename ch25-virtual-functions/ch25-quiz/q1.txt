@@ -1,0 +1,6 @@
+// 1a: getName() isn't virtual, so b.getName() will only look at Base's functions and print "Base"
+// 1b: Derived::getName() has different constness from Base::getName() so it won't qualify as an override and virtual function resolution will ignore it
+// 1c: variable b in main() isn't a reference or pointer to a class type so variable d gets sliced and its Base portion gets copied into b; no virtual function resolution occurs on non-reference/non-pointer variables so this is just a regular member function call and resolves to Base::getName()
+// 1d: Base is marked final so Derived can't inherit from it; this won't compile
+// 1e: Derived::getName() is a pure virtual function, and even though it has a definition, that definition isn't called by default (it's primarily for use by Derived's derived classes), so Derived remains an abstract class that can't be instantiated; this won't compile
+// 1f: we're allocating d on the heap but never provided a virtual ~Base(), so although we delete b, that only deletes the Base portion of d and leaves the Derived portion behind (leaks it)
